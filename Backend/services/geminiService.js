@@ -39,11 +39,22 @@ const summarizeText = async (text) => {
       },
     ];
 
-    // Zero-shot prompt → no examples, just direct instruction
-    const zeroShotPrompt = `
+    // 🟢 One-shot prompt → instruction + one example
+    const oneShotPrompt = `
       You are an AI-powered study assistant.
       Summarize the given text and extract 3-5 keywords.
       Respond strictly in JSON matching the function schema.
+
+      Example:
+      Input Text: "The water cycle describes how water evaporates, forms clouds, and returns as rain."
+      Expected JSON:
+      {
+        "summary": "The water cycle explains how water evaporates, condenses into clouds, and falls back as rain.",
+        "length": "short",
+        "keywords": ["water cycle", "evaporation", "clouds", "rain"]
+      }
+
+      Now summarize the following text:
     `;
 
     const result = await model.generateContent({
@@ -51,8 +62,8 @@ const summarizeText = async (text) => {
         {
           role: "user",
           parts: [
-            { text: zeroShotPrompt },
-            { text }, // actual user text appended after instructions
+            { text: oneShotPrompt },
+            { text }, // actual user text appended after example
           ],
         },
       ],
@@ -72,6 +83,4 @@ const summarizeText = async (text) => {
   }
 };
 
-module.exports = { summarizeText }; //
-
-
+module.exports = { summarizeText };
