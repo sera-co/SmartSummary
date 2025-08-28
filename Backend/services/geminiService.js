@@ -39,19 +39,37 @@ const summarizeText = async (text) => {
       },
     ];
 
-    // 🟢 One-shot prompt → instruction + one example
-    const oneShotPrompt = `
+    // 🟢 Multi-shot prompt → multiple examples
+    const multiShotPrompt = `
       You are an AI-powered study assistant.
       Summarize the given text and extract 3-5 keywords.
       Respond strictly in JSON matching the function schema.
 
-      Example:
+      Example 1:
       Input Text: "The water cycle describes how water evaporates, forms clouds, and returns as rain."
       Expected JSON:
       {
         "summary": "The water cycle explains how water evaporates, condenses into clouds, and falls back as rain.",
         "length": "short",
         "keywords": ["water cycle", "evaporation", "clouds", "rain"]
+      }
+
+      Example 2:
+      Input Text: "Photosynthesis is the process by which plants use sunlight to make food from carbon dioxide and water."
+      Expected JSON:
+      {
+        "summary": "Photosynthesis allows plants to create food using sunlight, carbon dioxide, and water.",
+        "length": "short",
+        "keywords": ["photosynthesis", "plants", "sunlight", "carbon dioxide", "water"]
+      }
+
+      Example 3:
+      Input Text: "World War II was a global conflict from 1939 to 1945 involving most of the world's nations."
+      Expected JSON:
+      {
+        "summary": "World War II was a worldwide conflict between 1939 and 1945 involving major global powers.",
+        "length": "short",
+        "keywords": ["World War II", "global conflict", "1939", "1945", "nations"]
       }
 
       Now summarize the following text:
@@ -62,8 +80,8 @@ const summarizeText = async (text) => {
         {
           role: "user",
           parts: [
-            { text: oneShotPrompt },
-            { text }, // actual user text appended after example
+            { text: multiShotPrompt },
+            { text }, // actual user text appended after multiple examples
           ],
         },
       ],
